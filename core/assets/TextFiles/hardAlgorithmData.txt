@@ -1,0 +1,17 @@
+2 6
+Chase
+AStar
+ChaseAggressive
+ChaseAmbush
+ChasePatrol
+ChaseRandom
+ChaseAggressive
+ChaseAmbush
+Scatter
+AStar
+ScatterTopRightCorner
+ScatterTopLeftCorner
+ScatterBottomRightCorner
+ScatterBottomLeftCorner
+ScatterTopRightCorner
+ScatterTopLeftCorner

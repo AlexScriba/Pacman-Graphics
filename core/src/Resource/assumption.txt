@@ -1,0 +1,47 @@
+(1) The kinds of tiles
+By design the internal GameObject 2D array inside MazeStub class will keep only static characters. 
+PacMan and Ghost will NOT be stored in GameObject array, nor can the MazeStub class tell any information about them.
+Note: the "static characters" include: empty tiles (N), power up (U), food (F), gate (G), and wall (W).
+
+
+Initially, the maze should only contain the following kinds of tiles: food (F), power up (U), gate (G), and wall (W).
+
+(2) Where are the ghosts at the beginning of the game?
+
+	All ghosts will be inside the rectangular house at the beginning of the game. And since the size of our maze
+	is fixed to be 28 * 31, the ghosts' coordinates will have the following constraint:
+		 11 <= x_coordinate <= 17 AND 13 <= y_coordinate <= 15  (where the index for row and column starts at 0)
+
+(3) In addition to Maze class, I add the following new features for [MazeStub].
+
+	(2.1) Read from a hard-coded map file and create maze accordingly. This is the actual effect when you call generateMaze().
+
+	(2.2) Return the number of tiles that has food at any time. Implemented as getToalNumOfFood().
+
+	(2.3) Use the class Tile a.k.a. empty tile (N) to replace the null cells in GameObject 2D array in MazeStub.java.
+	      This is more consistent.
+
+	(2.4 ) Print the maze. Use a char to represent each static character. See toString().
+
+
+
+
+
+(2) Modifications I made
+
+M	Maze.java: add one more constructor "protected Maze()". This is to make the Maze class can be subclassed by MazeStub.
+
+A	MazeStub.java: the stub that is only for integration purpose. Some Maze functions are NOT properly implemeneted.
+
+A	Tile.java: I add this because I found the empty tiles (N) character is missing.
+
+A	Gate.java: I add this because I found the gate (G) character is missing.
+
+A	TellMyWorkingDirectory.java: for debug purpose, can be safely ignored when commiting to Git.
+
+A 	MazeTest.java: JUnit test file for MazeStub
+
+A	map1.txt : maze map
+
+M	/.classpath : add one line <classpathentry kind="map" path="map"/> so that I can read file in the /map directory
+
