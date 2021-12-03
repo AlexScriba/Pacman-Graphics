@@ -11,22 +11,21 @@ public static ModeDestructor getInstance() {
 	return instance;
 }
 
-
-public void destroyAllModes() {
+//void
+public boolean destroyAllModes() {
 	for(Mode m: modes) {
+		m.destroyGA();
+		m.destroySearch();
 		m.deleteMode();
 	}
 	modes.clear();
+	return true;
 }
 
-/*
-public void destroyMode() {
-	modes.clear();
-}
-*/
-
-public void addMode(Mode m) {
+//void
+public boolean addMode(Mode m) {
 	modes.add(m);
+	return true;
 }
 
 

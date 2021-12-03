@@ -3,7 +3,7 @@ package Game;
 import java.io.File;
 import java.util.Scanner;
 
-public class PacMan extends Moveable {
+public class PacMan extends TexturedMoveable {
 	private static PacMan instance; // we have only 1 PacMan
 	int lives;
 	int init_lives;
@@ -43,24 +43,29 @@ public class PacMan extends Moveable {
 		
 	}
 	
-	public static void destroyPacman() {
+	public static PacMan destroyPacman() {
 		instance = null;
+		return instance;
 	}
 	
-	public void resetPacMan() {
+	public boolean resetPacMan() {
 		this.resetPosition();
 		this.resetDirection();
+//		if(!this.resetPosition() || !this.resetDirection())
+//			return false;
 		lives = init_lives;
 		food = 0;
 		score = 0;
+		return true;
 	}
 
 	public static PacMan getInstance() {
 		return instance;
 	}
 
-	public void changeScore(int change) {
+	public boolean changeScore(int change) {
 		score += change;
+		return true;
 	}
 
 	public int getFood() {
@@ -68,8 +73,9 @@ public class PacMan extends Moveable {
 	}
 
 
-	public void changeLives(int deltaLife) {
+	public boolean changeLives(int deltaLife) {
 		lives += deltaLife;
+		return true;
 	}
 	
 	public int getLives() {
@@ -80,9 +86,12 @@ public class PacMan extends Moveable {
 		return score;
 	}
 	
-	public void incrementFood() {
+	public boolean incrementFood() {
 		food++;
+		return true;
 	}
-
-
+	
+	public void setFood(int food) {
+		this.food = food;
+	}
 }

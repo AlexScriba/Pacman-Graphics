@@ -5,13 +5,18 @@ import java.util.Random;
 
 
 public class RandomSearch implements SearchAlgorithm{
-	public static RandomSearch instance=new RandomSearch();
+	public static RandomSearch instance;
 	private Random random;
 	private RandomSearch() {
 		random = new Random();
 	}
 	
 	public static RandomSearch getInstance() {
+		if (instance == null) 
+		{
+			instance=new RandomSearch();
+		}
+		//delete afterwards
 		return instance;
 	}
 	
@@ -40,7 +45,8 @@ public class RandomSearch implements SearchAlgorithm{
 	}
 	
 	@Override
-	public void destroySearch() {
+	public SearchAlgorithm destroySearch() {
 		instance=null;
+		return instance;
 	}
 }

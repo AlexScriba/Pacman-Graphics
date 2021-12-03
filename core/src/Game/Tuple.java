@@ -35,6 +35,7 @@ public class Tuple {
 	public Tuple sum(Tuple t) {
 		return new Tuple(this.first + t.first, this.second + t.second);
 	}
+	
 	/**
 	 * return position that is x tiles a head of PacMan
 	 * */
@@ -52,7 +53,7 @@ public class Tuple {
 			case DOWN:
 				currentY+=x;
 				break;
-			case LEFT:
+			default:
 				currentX-=x;
 				break;
 		}
@@ -71,31 +72,16 @@ public class Tuple {
 		return distance;
 	}
 	
-//	public static Tuple targetForBlueGhost(Tuple start, Tuple end) {
-//		//END: Pacman position + 2 next tiles
-//		//draw a vector from red's position (START) to this tile
-//		//and then doubling the length of the vector
-//		//The tile that this new, extended vector ends on will be the actual target.
-//		
-//		int startX = start.first;
-//		int startY = start.second;
-//		int endX = end.first;
-//		int endY = end.second;
-//		
-//		int targetX = startX + 2 * (endX - startX);
-//		int targetY = startY + 2 * (endY - startY);
-//		
-//		return new Tuple(targetX, targetY);
-//	}
 	
-	
+	/*
 	public void changeTuple(int x, int y) {
 		this.first=x;
 		this.second=y;
 	}
+	*/
 
 	public boolean tupleBelong(ArrayList<Tuple> tuples){
-		for(Tuple t: tuples){
+		for(Tuple t:tuples){
 			if(this.equals(t)){
 				return true;
 			}
@@ -107,7 +93,8 @@ public class Tuple {
 		return (first<min.first) || (first>max.first) || (second<min.second) || (second>max.second);
 	}
 
-	public void clip(Tuple min, Tuple max){
+	public Tuple clip(Tuple min, Tuple max){
+		
 		if(first<min.getFirst()){
 			first=min.getFirst();
 		}
@@ -123,6 +110,8 @@ public class Tuple {
 		else if(second >max.getSecond()){
 			second = max.getSecond();
 		}
+		return this;
+	
 	}
 
 	@Override 

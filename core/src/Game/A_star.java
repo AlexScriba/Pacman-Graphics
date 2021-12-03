@@ -19,19 +19,12 @@ public class A_star implements SearchAlgorithm{
 	
 	
 	public static A_star getInstance() {
-		return instance;
-	}
-	
-	
-	public static void setA_star() {
 		if(instance == null) {
 			instance = new A_star(Maze.getInstance().getN()*Maze.getInstance().getM(), Maze.getInstance().getN());
 			
 		}
 		
-		else {
-			System.out.println("A* has already been set!");
-		}
+		return instance;
 	}
 	
 /** A_star.getPath() will return every tile that is on the solution path
@@ -47,40 +40,44 @@ public ArrayList<Tuple> getPath(Tuple start, Tuple end, ArrayList<Direction> pos
 	Maze maze=Maze.getInstance();
 	PriorityQueue<Node> frontier = new PriorityQueue<>();
 	
-	Node start_node=new Node(start, null,  Tuple.distance(start, end));
-	frontier.add(start_node);
-	nodes[Tuple.tuppleToInt(start, moduo)]=start_node;
-	
-	Node current=null;
+	Node current=new Node(start, null,  Tuple.distance(start, end));
+	nodes[Tuple.tuppleToInt(start, moduo)]=current;
 	ArrayList<Tuple> path=new ArrayList<Tuple>();
 	
-	while(!frontier.isEmpty()) {
-		current = frontier.poll();
-
-		if((current.getID()).equals(end)) {
-			break;
-		}
-
+	//loop coverage 0 -> start = end (test 1)
+	// loop coverage 1 -> start -> end (test 2)
+	// loop coverage >1 -> start -u - v - ... -> end (test 3)
+	
+	while(!current.getID().equals(end)) {
+		
+		
 		double prev_heuristic=Tuple.distance(current.getID(),end);
+		//always going to go through 4 directions
 		for(Direction dir:possibleDirections) {
 			Tuple child = current.getID().sum(dir.DirectionToTuple());
+			
+			//false in  (test 2, test 3)
+			//true in (test 2, test3)
 			if(maze.getSymbol(child.getSecond(), child.getFirst())=='W') {
 				continue;
 			}
 
 			double child_value=current.getValue() - prev_heuristic + 1 + Tuple.distance(child,end);
 			Node child_node=nodes[Tuple.tuppleToInt(child, moduo)];
+			
 			//Push the node in the queue if it has never been investigated
+			
+			//it is false in (test 3)
+			//it is true in test 2, test 3
 			if(child_node==null) {
 				child_node = new Node(child, current, child_value);
 				frontier.add(child_node);
 				nodes[Tuple.tuppleToInt(child, moduo)]=child_node;
-				/*
-				if (nodes[child_node.getParent()]==null) {
-					System.out.println("Greska!");
-				}*/
 			}
-			//Update the node if it is the frontier
+			
+			
+			//it is false in test 2, test3
+			//it is true in test 3
 			else if(frontier.contains(child_node)) {
 				frontier.remove(child_node);
 				child_node.setValue(child_value);
@@ -89,6 +86,7 @@ public ArrayList<Tuple> getPath(Tuple start, Tuple end, ArrayList<Direction> pos
 			}
 			
 		}
+		current = frontier.poll();
 		
 		
 	}
@@ -96,6 +94,9 @@ public ArrayList<Tuple> getPath(Tuple start, Tuple end, ArrayList<Direction> pos
 	
 		Stack<Tuple> reverse = new Stack<>();
 		
+		//loop coverage: =0; start = end (test 1)
+		//loop coverage: =1; start->end (test 2)
+		//loop coverage >1; start -> u -> ... -> v -> end (test 3)
 		while(current.getParent()!=null) {
 			reverse.push(current.getID());
 			current=current.getParent();
@@ -103,40 +104,61 @@ public ArrayList<Tuple> getPath(Tuple start, Tuple end, ArrayList<Direction> pos
 		
 		reverse.push(start);
 		
+		//loop coverage: never 0
+		//loop coverage: 1 -> start = end (tests 1)
+		//loop coverage: >1 -> start -> end (test 2,3)
 		while(!reverse.isEmpty()) {
 			path.add(reverse.pop());
 		}
 
+		//always >1 because of the Maze size => test (1,2,3)
 		for(int i=0;i<size;i++){
 			nodes[i]=null;
 		}
 	
 	return path;
 }
+//test 3 included the coverage of Maze
 
 
-
-
+//purpose: find a closest tile to the starting tile which is a wall or an empty tile to be a goal for
+//ArrayList<Tuple> getPath(Tuple, Tuple, ArrayList<Direction>)
 public Tuple BFS(Tuple t, ArrayList<Direction> possibleDirections){
 	Maze maze=Maze.getInstance();
 	ArrayList<Tuple> tupleQueue = new ArrayList<>();
 	ArrayList<Tuple> visited = new ArrayList<>();
-	tupleQueue.add(t);
-	while(!tupleQueue.isEmpty()){
-		Tuple current = tupleQueue.remove(0);
-		char indicator = maze.getSymbol(current.getSecond(), current.getFirst());
-		if(indicator!='W' && indicator!='N'){
-			return current;
-		}
+	char indicator = maze.getSymbol(t.getSecond(), t.getFirst());
+	Tuple current = t;
+	
+	//loop coverage: 0: (test 4)
+	//loop coverage 1:  (test 5)
+	// loop coverage >1: (test 6), (test 7)
+	//test4: FF
+	//test5: T-, FF
+	//test6: FF, T-, FT
+	//test7: T-, FF (exists to "cover" Tuple coverage)
+	
+	
+	while(indicator == 'W' || indicator=='n'){
+		
+		//all possible directions
 		for(Direction dir:possibleDirections){
 			Tuple child = current.sum(dir.DirectionToTuple());
+			
+			//test5:TTT
+			//test6:TTT, F-, TF-, TTF
+			//test7: TTT, F-, TF-, TTF
 			if(!child.toClip(maze.getTopLeftCorner(), maze.getBottomRightCorner()) && !child.tupleBelong(visited) && !child.tupleBelong(tupleQueue)){
 				tupleQueue.add(child);
 			}
-		}
+			}
+		
 		visited.add(current);
+		current = tupleQueue.remove(0);
+		indicator = maze.getSymbol(current.getSecond(), current.getFirst());
 	}
-		return null;
+	
+		return current;
 
 }
 
@@ -144,13 +166,7 @@ public Tuple BFS(Tuple t, ArrayList<Direction> possibleDirections){
 public Tuple findClosestGoal(Tuple t, ArrayList<Direction> possibleDirections){
 	Maze maze = Maze.getInstance();
 	t.clip(maze.getTopLeftCorner(), maze.getBottomRightCorner());
-	char symbol = maze.getSymbol(t.getSecond(), t.getFirst());
-	if(symbol =='W' || symbol=='N'){
-		return BFS(t, possibleDirections);
-	}
-	return t;
-
-
+	return BFS(t, possibleDirections);
 }
 
 @Override
@@ -160,6 +176,8 @@ public Direction getNextDirection(ArrayList<Tuple> points, ArrayList<Direction> 
 	end = findClosestGoal(end, possibleDirections);
 	ArrayList<Tuple> path = getPath(start, end, possibleDirections);
 	Tuple nextTuple = null;
+	//T for test 11,12
+	//F for test 13
 	if(path.size()>1){
 	nextTuple = path.get(1);
 	}
@@ -167,8 +185,10 @@ public Direction getNextDirection(ArrayList<Tuple> points, ArrayList<Direction> 
 	else{
 		nextTuple = start;
 	} 
-
+	// TRAVERSE all possible directions until we find a direction that can lead to the specified tuple
 	for(Direction dir: possibleDirections){
+		//T test 11,12
+		//F test 13
 		if(start.sum(dir.DirectionToTuple()).equals(nextTuple)){
 			return dir;
 		}
@@ -177,8 +197,10 @@ public Direction getNextDirection(ArrayList<Tuple> points, ArrayList<Direction> 
 }
 
 @Override
-public void destroySearch() {
+public SearchAlgorithm destroySearch() {
 	instance=null;
+	return instance;
+			
 }
 
 }

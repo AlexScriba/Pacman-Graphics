@@ -11,37 +11,36 @@ public class Chase extends Mode {
 		super(sa);
 	}
 
-	public static void setChase(SearchAlgorithm sa) {
+
+	public static boolean setChase(SearchAlgorithm sa) {
 		if(instance==null){
 		instance = new Chase(sa);
+		return true;
 		}
 		else{
-			System.out.println("Chase has already been set");
+			return false;
 		}
+		
 	}
 	
 	
-	
-	
-	
-	
 	@Override
-	public void addAlgorithm(String algorithmName) {
+	public boolean addAlgorithm(String algorithmName) {
 		switch (algorithmName) {
 		case "ChaseAggressive":
 			algorithms.add(new ChaseAggressive());
-			break;
+			return true;
 		case "ChaseAmbush":
 			algorithms.add(new ChaseAmbush());
-			break;
+			return true;
 		case "ChasePatrol":
 			algorithms.add(new ChasePatrol());
-			break;
+			return true;
 		case "ChaseRandom":
 			algorithms.add(new ChaseRandom());
-			break;
+			return true;
 		default:
-			// throw error
+			return false;
 		}
 	}
 
@@ -63,8 +62,9 @@ public class Chase extends Mode {
 	}
 
 	@Override
-	public void deleteMode(){
+	public Mode deleteMode(){
 		instance =null;
+		return instance;
 	}
 
 }

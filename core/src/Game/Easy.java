@@ -1,9 +1,5 @@
 package Game;
 
-import java.io.IOException;
-
-import com.badlogic.gdx.Gdx;
-
 public class Easy extends Difficulty{
 	private static Easy instance = new Easy();
 	private Easy() {};

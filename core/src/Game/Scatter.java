@@ -13,32 +13,33 @@ public class Scatter extends Mode {
 		
 	}
 
-	public static void setScatter(SearchAlgorithm sa){
+	public static boolean setScatter(SearchAlgorithm sa){
 		if(instance==null){
 		instance = new Scatter(sa);
+		return true;
 	}
 		else{
-			System.out.println("Scatter has already been intitialized");
+			return false;
 		}
 	}
-
+	//void
 	@Override
-	public void addAlgorithm(String algorithmName) {
+	public boolean addAlgorithm(String algorithmName) {
 		switch (algorithmName) {
 		case "ScatterBottomLeftCorner":
 			algorithms.add(new ScatterBottomLeftCorner());
-			break;
+			return true;
 		case "ScatterBottomRightCorner":
 			algorithms.add(new ScatterBottomRightCorner());
-			break;
+			return true;
 		case "ScatterTopLeftCorner":
 			algorithms.add(new ScatterTopLeftCorner());
-			break;
+			return true;
 		case "ScatterTopRightCorner":
 			algorithms.add(new ScatterTopRightCorner());
-			break;
+			return true;
 		default:
-			// throw error
+			return false;
 		}
 	}
 
@@ -64,8 +65,10 @@ public class Scatter extends Mode {
 		return "Scatter";
 	}
 
+	//void
 	@Override
-	public void deleteMode(){
+	public Mode deleteMode(){
 		instance =null;
+		return instance;
 	}
 }

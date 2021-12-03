@@ -2,7 +2,7 @@ package Game;
 
 import java.util.ArrayList;
 
-interface SearchAlgorithm {
+public interface SearchAlgorithm {
 	public Direction getNextDirection(ArrayList<Tuple> points, ArrayList<Direction> accebileDirections);
-	public void destroySearch();
+	public SearchAlgorithm destroySearch();
 }

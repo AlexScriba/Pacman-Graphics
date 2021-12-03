@@ -17,7 +17,7 @@ public class Maze {
 	
 	
 	private GameObject[][] matrix;
-	private final ArrayList<GameObject> resetObjectList=new ArrayList<GameObject>();
+	private final ArrayList<GameObject> resetObjectList = new ArrayList<GameObject>();
 	private static Maze instance;
 	private int totalFood = 0; 
 	private Tuple minCornerHouse;
@@ -46,7 +46,8 @@ public class Maze {
 	}
 	
 	public boolean isInHouse(Tuple t){
-		return !t.toClip(minCornerHouse, maxCornerHouse);
+		boolean isTupleInHouse = t.toClip(minCornerHouse, maxCornerHouse);
+		return !isTupleInHouse;
 	}
 
 	
@@ -62,18 +63,22 @@ public class Maze {
 		return m;
 	}
 	
-	
-	public void removeObject(Tuple t) {
+	/**
+	 * return false if matrix[i][j] == null
+	 * */
+	public boolean removeObject(Tuple t) {
+		boolean addedToResetList = false;
 		int i=t.getSecond();
 		int j=t.getFirst();
 		if(matrix[i][j]!=null) {
 			resetObjectList.add(matrix[i][j]);
+			addedToResetList = true;
 		}
 		matrix[i][j]=null;
+		return addedToResetList;
 	}
 	
 	public char getSymbol(int i,int j) {
-		//symbol for null is n
 		if(matrix[i][j]==null) {
 			return ' ';
 		}
@@ -82,40 +87,42 @@ public class Maze {
 		}
 	}
 	
-	public static void destroyMaze() {
-		Gate.deleteGate();
+	public static Maze destroyMaze() {
 		instance = null;
+		Gate.deleteGate();
+		return instance;
+		
 	}
 	
-	public void resetMaze() {
+	public boolean resetMaze() {
 		//use resetGameObject to reset the maze to its original position
-		for(GameObject go:resetObjectList) {
-			Tuple position = go.getTuple();
+		// Here resetObjectList will never be null, so I comment it out
+//		if(resetObjectList == null)
+//			return false;
+		for(GameObject go : resetObjectList) {
+			Tuple position = go.getTuple(); // Always a success
 			int i = position.getSecond();
 			int j= position.getFirst();
-			matrix[i][j]=go;
+			matrix[i][j] = go;
 		}
 		resetObjectList.clear();
+		return true;
 	}
 	
 	public Tuple getBottomLeftCorner() {
 		return new Tuple(0, m-1);
-//		return new Tuple(m, 0);
 	}
 	
 	public Tuple getBottomRightCorner() {
 		return new Tuple(n-1, m-1);
-//		return new Tuple(m, n-1);
 	}
 	
 	public Tuple getTopLeftCorner() {
 		return new Tuple(0, 0);
-//		return new Tuple(-4, 2);
 	}
 	
 	public Tuple getTopRightCorner() {
 		return new Tuple(n-1, 0);
-//		return new Tuple(-4, n-3);
 	}
 	
 	/**
@@ -138,13 +145,13 @@ public class Maze {
             fileReader = new Scanner(new File(mapFile));
             String line = null;
             while (fileReader.hasNext()) {
-                try {
-                    line = fileReader.nextLine();
-                } catch (Exception eof) {
+//                try {
+                line = fileReader.nextLine();
+//                } catch (Exception eof) {
                     // throw new A5FatalException("Could not read resource");
-                    System.out.printf("Could not read the file %s further", mapFile);
-                    return false;
-                }
+//                    System.out.printf("Could not read the file %s further", mapFile);
+//                    return false;
+//                }
 
                 if (line.trim().equals(""))
                     continue;    //skip dummy lines

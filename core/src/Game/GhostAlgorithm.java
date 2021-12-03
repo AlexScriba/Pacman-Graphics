@@ -6,5 +6,5 @@ package Game;
  *
  */
 public interface GhostAlgorithm {
-	public void behave(Ghost g, SearchAlgorithm sa, boolean doReverse);
+	public Tuple behave(Ghost g);
 }

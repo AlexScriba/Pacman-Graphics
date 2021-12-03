@@ -52,8 +52,10 @@ public class GameEngine extends ApplicationAdapter {
 	Texture gate;
 	Texture frightenedGhost;
 	
-	boolean gameOver;
+	TextButton RestartButton;
+	
 	boolean gameStart;
+	boolean gameOver;
 	
 	float pacmanRotation = 0;
 	
@@ -129,8 +131,8 @@ public class GameEngine extends ApplicationAdapter {
 		gate = new Texture("Gate Tile.png");
 		frightenedGhost = new Texture("Frightened1.png");
 		
-		gameOver = false;
 		gameStart = false;
+		gameOver = false;
 		
 	}
 	
@@ -165,7 +167,7 @@ public class GameEngine extends ApplicationAdapter {
 		batch.begin();
 		
 		
-		if(!gameOver && gameStart) {
+		if(gameStart && !gameOver) {
 			playGame();
 		} else if(!gameStart) {
 			showMenu();
@@ -187,7 +189,6 @@ public class GameEngine extends ApplicationAdapter {
 		stage.clear();
 		
 		boolean keyPressed = false;
-		float rotation = 0;
 
 		if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
 			game.gameTick("Left");
@@ -205,9 +206,13 @@ public class GameEngine extends ApplicationAdapter {
 			game.gameTick("Down");
 			keyPressed = true;
 			pacmanRotation = 270;
+		} else if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+			game.resetGame();
+			pacmanRotation = 0;
 		}
 		
 		if(keyPressed && game.isGameOver()) {
+			game.gameOver();
 			gameOver = true;
 		}
 		
@@ -234,13 +239,21 @@ public class GameEngine extends ApplicationAdapter {
 		}	
 		
 		// Draw Pacman	
-		batch.draw(new TextureRegion(pac.getTexture()), toXCoord(pac.getTuple().getFirst()), toYCoord(pac.getTuple().getSecond()), xScale/2, yScale/2, xScale, yScale, 1f, 1f, pacmanRotation);
+		float width = xScale;
+		float height = yScale;
+		
+		if(pacmanRotation == 90 || pacmanRotation == 270) {
+			width = yScale;
+			height = xScale;
+		}
+		
+		batch.draw(new TextureRegion(pac.getTexture()), toXCoord(pac.getTuple().getFirst()), toYCoord(pac.getTuple().getSecond()), width/2, height/2, width, height, 1f, 1f, pacmanRotation);
 		
 		// Draw Ghosts
-		for(GameObject ghost : ghosts) {
+		for(Ghost ghost : ghosts) {
 			Texture tex;
 			
-			if(game.isInFrightenedMode()) {
+			if(game.getModeName().equals("Frightened")) {
 				tex = frightenedGhost;
 			} else {
 				tex = ghost.getTexture();
@@ -250,7 +263,6 @@ public class GameEngine extends ApplicationAdapter {
 		
 		font.draw(batch, "Score: " + pac.getScore(), Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 20);
 		font.draw(batch, "Lives: " + pac.getLives(), 10, Gdx.graphics.getHeight() - 20);
-		
 	}
 	
 	private void showGameOver() {
@@ -295,6 +307,3 @@ public class GameEngine extends ApplicationAdapter {
 		System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
 	}
 }
-
-
-// https://libgdx.info/buttons-scene2d/

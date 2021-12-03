@@ -4,7 +4,7 @@ package Game;
 public class ChasePatrol implements GhostAlgorithm {
 
 	@Override
-	public void behave(Ghost g, SearchAlgorithm sa, boolean doReverse) {
+	public Tuple behave(Ghost g) {
 		// Pacman position + 2 next tiles
 		// draw a vector from red's position to this tile
 		// and then doubling the length of the vector
@@ -16,7 +16,7 @@ public class ChasePatrol implements GhostAlgorithm {
 		// Check if Pacman ate 30 food items
 		PacMan pacman = PacMan.getInstance();
 		if (pacman.getFood() < 30) {
-			return;
+			return g.getTuple();
 		}
 
 		// The target tile is: pacman's position + 2 next tiles
@@ -28,17 +28,13 @@ public class ChasePatrol implements GhostAlgorithm {
 			twoTilesAHead = Tuple.getXTilesAHead(2, pacman.getDirection(), pacman.getTuple());
 		}
 
-		//twoTilesAHead = Tuple.getXTilesAHead(2, pacman.getDirection(), pacman.getTuple());
-
 		// get red ghost's position
 		Ghost red = Ghost.getGhostByName('R');
 		Tuple redPosition = red.getTuple();
 		Tuple targetTile = twoTilesAHead.sum(twoTilesAHead.difference(redPosition));
 
-//		Tuple targetTile = Tuple.targetForBlueGhost(redPosition, twoTilesAHead);
-
-		g.moveToTarget(sa, targetTile, doReverse);
-
+		return targetTile;
 	}
-
+	
+	
 }

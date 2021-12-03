@@ -23,16 +23,19 @@ public double getValue() {
 	return value;
 }
 
-public void setValue(double value) {
+public double setValue(double value) {
 	this.value=value;
+	return value;
 }
 
 public Node getParent() {
 	return parent;
 }
 
-public void setParent(Node parent) {
+public Node setParent(Node parent) {
 	this.parent=parent;
+	return parent;
+	
 }
 
 @Override
@@ -40,7 +43,14 @@ public int compareTo(Node other) {
 	Double arg1 = this.getValue();
 	Double arg2 = other.getValue();
 	return arg1.compareTo(arg2);
-	}
+}
+
+@Override 
+public boolean equals(Object n){
+	Node node = (Node)n;
+	return this.id.equals(node.id);
+	
+}
 
 
 }

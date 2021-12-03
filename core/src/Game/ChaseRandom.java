@@ -4,7 +4,7 @@ package Game;
 public class ChaseRandom implements GhostAlgorithm {
 
 	@Override
-	public void behave(Ghost g, SearchAlgorithm sa, boolean doReverse) {
+	public Tuple behave(Ghost g) {
 //		Chase random: 
 //		check the distance between pacman and orange in 8 tile radius
 //		>= 8 tiles, go to pacman's position
@@ -15,7 +15,7 @@ public class ChaseRandom implements GhostAlgorithm {
 		Maze maze = Maze.getInstance();
 		System.out.printf("The total number of food is %d and Pacman ate %d\n", maze.getTotalNumOfFood(), pacman.getFood());
 		if ((double)pacman.getFood()/(double)maze.getTotalNumOfFood() <= (double)1/(double)3) {
-			return;
+			return g.getTuple();
 		}
 
 		Tuple pacmanPos = pacman.getTuple();
@@ -31,8 +31,10 @@ public class ChaseRandom implements GhostAlgorithm {
 			//go to bottom left corner
 			targetTile = maze.getBottomLeftCorner();
 		}
-
-		g.moveToTarget(sa, targetTile, doReverse);
+		
+		return targetTile;
 	}
+	
+	
 
 }

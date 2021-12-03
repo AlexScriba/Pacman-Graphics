@@ -1,12 +1,9 @@
 package Game;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 public abstract class GameObject {
 	private Tuple position;
 	private final char symbol;
-	private Texture texture;
+	private Sprite asset;
 
 	public GameObject(int x_coordinate, int y_coordinate, char symbol) {
 		this.symbol = symbol; // objects will not change their symbols during the game
@@ -30,17 +27,13 @@ public abstract class GameObject {
 
 	
 	
-	public void setPosition(Tuple t) {
+	public boolean setPosition(Tuple t) {
+		if(t == null)
+			return false;
 		position = t;
+		return true;
 	}
 
 	// Alex and Anushka will write methods using Assets
-	public Texture getTexture() {
-		return texture;
-	}
-	
-	public void setTexture(Texture texture) {
-		this.texture = texture;
-	}
-	
+
 }
