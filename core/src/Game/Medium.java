@@ -2,7 +2,10 @@ package Game;
 
 public class Medium extends Difficulty{
 	private static Medium instance = new Medium();
-	private Medium(){};
+	private Medium(){
+		super();
+		pathPrefix = System.getProperty("user.dir") + pathPrefix;
+	};
 	
 	public static Medium getInstance() {
 		return instance;

@@ -1,5 +1,6 @@
 package Game;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 //Game is used as the Facade for the Main class
@@ -28,6 +29,15 @@ public class Game {
 	}
 
 	public int gameInit(String difficultyStr, String mode) {
+		try {
+			String msg = new java.io.File("../core/assets/").getCanonicalPath();
+			String msg2 = System.getProperty("user.dir");
+			System.out.println(msg);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		boolean state = setDifficulty(difficultyStr);
 		if(!state) {
 			return 1; // Difficulty Init failed

@@ -5,9 +5,6 @@ package Game;
 
 public abstract class Difficulty {
 
-	//private static ArrayList<String> mazeFilePathname = new ArrayList<String>();
-	//private static int index=3;
-	
 	public abstract boolean doReverse();
 	
 	public abstract String getGhostFile();
@@ -17,6 +14,6 @@ public abstract class Difficulty {
 	public abstract String getAlgorithm();
 	
 	public abstract String getMaze();
-	
-	protected String pathPrefix = "../core/assets/TextFiles/";
+
+	protected String pathPrefix = "/../resources/main/TextFiles/";
 }

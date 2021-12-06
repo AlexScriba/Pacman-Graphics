@@ -52,15 +52,15 @@ public class GameEngine extends ApplicationAdapter {
 	Texture gate;
 	Texture frightenedGhost;
 	
-	TextButton RestartButton;
-	
 	boolean gameStart;
 	boolean gameOver;
 	
 	float pacmanRotation = 0;
 	
+	// Runs at the start of the game
 	@Override
 	public void create () {
+		// Game setup
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		
@@ -80,6 +80,7 @@ public class GameEngine extends ApplicationAdapter {
 		float centreX = Gdx.graphics.getWidth()/2 - buttonWidth/2;
 		float centreY = Gdx.graphics.getHeight()/2;
 		
+		// Create buttons for difficulties and add Listeners
 		TextButton easyButton = new TextButton("Easy", mySkin, "small");
 		easyButton.setSize(buttonWidth, buttonHeight);
 		easyButton.setPosition(centreX, centreY + gap);
@@ -119,6 +120,7 @@ public class GameEngine extends ApplicationAdapter {
 			}
 		});
 		
+		// Add buttons to stage
 		stage.addActor(easyButton);
 		stage.addActor(mediumButton);
 		stage.addActor(hardButton);
@@ -131,11 +133,13 @@ public class GameEngine extends ApplicationAdapter {
 		gate = new Texture("Gate Tile.png");
 		frightenedGhost = new Texture("Frightened1.png");
 		
+		// Booleans for game control
 		gameStart = false;
 		gameOver = false;
 		
 	}
 	
+	// Repeated game set up regardless of difficulty
 	private void setupGame() {
 		maze = Maze.getInstance();
 		
@@ -162,16 +166,20 @@ public class GameEngine extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		// Clear screen
 		ScreenUtils.clear(0, 0, 0, 1);
 	
 		batch.begin();
 		
-		
+		// Decide what screen to show
 		if(gameStart && !gameOver) {
+			// Show game screen
 			playGame();
 		} else if(!gameStart) {
+			// Show main menu
 			showMenu();
 		} else {
+			// Show game over screen
 			showGameOver();
 		}
 		
@@ -180,14 +188,18 @@ public class GameEngine extends ApplicationAdapter {
 		batch.end();
 	}
 	
+	// Show main menu
 	private void showMenu() {
 		stage.act();
 		stage.draw();
 	}
 	
+	// PLay game
 	private void playGame() {
+		// Remove all buttons
 		stage.clear();
 		
+		// Get user input
 		boolean keyPressed = false;
 
 		if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
@@ -265,9 +277,8 @@ public class GameEngine extends ApplicationAdapter {
 		font.draw(batch, "Lives: " + pac.getLives(), 10, Gdx.graphics.getHeight() - 20);
 	}
 	
+	// Show game over screen
 	private void showGameOver() {
-		// Show game over screen
-		
 		float spacing = 20;
 		
 		float centerX = Gdx.graphics.getWidth()/2 - 100;
@@ -277,8 +288,10 @@ public class GameEngine extends ApplicationAdapter {
 		font.draw(batch, "Your Score was: " + pac.getScore(), centerX, centerY - spacing/2);
 	}
 	
+	// Clean up after finishing
 	@Override
 	public void dispose () {
+		// Dispose of all textures
 		batch.dispose();
 		font.dispose();
 		floor.dispose();
@@ -295,15 +308,14 @@ public class GameEngine extends ApplicationAdapter {
 		}
 	}
 	
+	// Helper function to convert map x coordinates to screen coordinates
 	public float toXCoord(int x) {
 		return (x) * xScale;
 	}
 	
+	// Helper function to convert map y coordinates to screen coordinates
 	public float toYCoord(int y) {
 		return (maze.getM()-(y) - 1) * yScale;
 	}
-	
-	public void printMouse() {
-		System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
-	}
+
 }

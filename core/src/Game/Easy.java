@@ -1,8 +1,15 @@
 package Game;
 
+import java.io.IOException;
+
+import com.badlogic.gdx.Gdx;
+
 public class Easy extends Difficulty{
 	private static Easy instance = new Easy();
-	private Easy() {};
+	private Easy() {
+		super();
+		pathPrefix = System.getProperty("user.dir")  + pathPrefix;
+	};
 	
 	public static Easy getInstance() {
 		return instance;
@@ -13,6 +20,7 @@ public class Easy extends Difficulty{
 //		return "src/Resource/easyGhostData.txt";
 		
 		return pathPrefix + "easyGhostData.txt";
+//		return Gdx.files.internal(pathPrefix + "easyGhostData.txt");
 	}
 	
 	@Override

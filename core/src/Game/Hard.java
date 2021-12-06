@@ -2,7 +2,10 @@ package Game;
 
 public class Hard extends Difficulty{
 	private static Hard instance = new Hard();
-	private Hard() {};
+	private Hard() {
+		super();
+		pathPrefix = System.getProperty("user.dir") + pathPrefix;
+	};
 	
 	public static Hard getInstance() {
 		return instance;
